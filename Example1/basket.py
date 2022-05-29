@@ -1,7 +1,7 @@
 from typing import Dict
-from Example1.article import Article
-from Example1.order import Order
-from Example1.warehouse_manager import Warehouse, WarehouseManager
+from article import Article
+from order import Order
+from warehouse_manager import WarehouseManager
 
 
 class Basket:

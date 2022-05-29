@@ -1,6 +1,6 @@
 from time import sleep
 from typing import Dict
-from Example1.article import Article
+from article import Article
 
 
 class WarehouseManager:
@@ -37,4 +37,5 @@ class WarehouseManager:
     def printAllArticles(self) -> None:
         for article in self._stock:
             print(article.getFormattedDescription())
+            print("Number of articles: " + str(self._stock[article]))
             print("-"*20)

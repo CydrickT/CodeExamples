@@ -1,4 +1,4 @@
-from Example1.address import Address
+from address import Address
 
 
 class Client:
