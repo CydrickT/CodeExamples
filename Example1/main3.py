@@ -1,3 +1,5 @@
+from threading import Thread
+from time import sleep
 from address import Address
 from article import Article, NonTaxableArticle, TaxableArticle
 from basket import Basket
@@ -5,7 +7,20 @@ from client import Client
 from order import Order
 from warehouse_manager import WarehouseManager
 
-# Basic example for refactorings.
+# Thread issues
+
+def orderClientBasket(basket: Basket, warehouse_manager: WarehouseManager):
+    print("========== Ordering " + basket.client.first_name + "'s Basket ==========")
+    order : Order = basket.order(warehouse_manager)
+    print("========== Printing " + basket.client.first_name + "'s Receipt ==========")
+    if order is not None:
+        order.print_receipt()
+
+def waitUntilPrintingWarehouse(warehouse_manager: WarehouseManager):
+    print("========== Waiting 10 seconds before printing articles ==========")
+    sleep(10)
+    print("========== Reprinting all articles ==========")
+    warehouse_manager.printAllArticles()
 
 address1: Address = Address("123", "4e boulevard", "Montreal", "QC", "Canada", "J7V 1A1")
 client1: Client = Client("John", "Doe", "111-222-3333", address1)
@@ -31,22 +46,14 @@ basket_client1.addArticle(computer, 1)
 basket_client1.addArticle(mouse, 1)
 basket_client1.addArticle(bread, 4)
 
-#basket_client2.addArticle(computer, 1)
+basket_client2.addArticle(computer, 1)
 basket_client2.addArticle(mouse, 2)
 basket_client2.addArticle(bread, 2)
 
-print("========== Ordering " + client1.first_name + "'s Basket ==========")
-order_client1 : Order = basket_client1.order(warehouse_manager)
-print("========== Printing " + client1.first_name + "'s Receipt ==========")
-if order_client1 is not None:
-    order_client1.print_receipt()
+thread_client1 = Thread(target=orderClientBasket, args=(basket_client1, warehouse_manager))
+thread_client2 = Thread(target=orderClientBasket, args=(basket_client2, warehouse_manager))
+thread_client1.start()
+thread_client2.start()
 
-print("========== Ordering " + client2.first_name + "'s Basket ==========")
-order_client2 : Order = basket_client2.order(warehouse_manager)
-print("========== Printing " + client2.first_name + "'s Receipt ==========")
-if order_client2 is not None:
-    order_client2.print_receipt()
-
-print("========== Reprinting all articles ==========")
-
-warehouse_manager.printAllArticles()
+thread_print_warehouse_content = Thread(target=waitUntilPrintingWarehouse, args=(warehouse_manager,))
+thread_print_warehouse_content.start()

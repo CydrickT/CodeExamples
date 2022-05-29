@@ -1,14 +1,15 @@
 from typing import Dict
 from article import Article
 from order import Order
+from client import Client
 from warehouse_manager import WarehouseManager
 
 
 class Basket:
 
-    def __init__(self, client):
+    def __init__(self, client: Client):
         self._article_list: Dict[Article, int] = {}
-        self.client = client
+        self.client: Client = client
 
     def addArticle(self, article: Article, quantity: int) -> None:
         if article in self._article_list:
